@@ -23,19 +23,17 @@ public class StationdemoApplication {
 	
 	
 	
-//	@PostConstruct
-//	public void init() {
-//		
-//		List<Station> list = new ArrayList<>();
-//		
-//		
-//		list.add(new Station("1234", "Hyd", true, "NP3DR"));
-//		list.add(new Station("2345", "Madras", false, "GP3LE"));
-//		
-//		
-//		stationDao.saveAll(list);
-//		
-//	}
+	@PostConstruct
+	public void init() {
+		
+		List<Station> list = new ArrayList<>();
+				
+		list.add(new Station("1001", "NBC", true, "KXAN"));
+		list.add(new Station("1002", "FOX", false, "KTBC"));
+		list.add(new Station("1003", "ABC", true, "KVUE"));
+		
+		stationDao.saveAll(list);
+	}
 	
 	@Autowired
 	StationDAO stationDao;
