@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Station {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="station_id")
 	String stationId;
 	@Column(name="station_name")
