@@ -1,10 +1,8 @@
 package com.sangana.stationdemo;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.sangana.stationdemo.dao.StationDAO;
 import com.sangana.stationdemo.domain.Station;
+import com.sangana.stationdemo.errorhandling.ExceptionHandler;
+import com.sangana.stationdemo.service.StationDemoService;
 
 /**
  * @author sksangana
@@ -28,61 +28,59 @@ import com.sangana.stationdemo.domain.Station;
 @RestController
 @RequestMapping("/station")
 public class StationController {
-
+	
 	@Autowired
-	StationDAO stationDao;
+	StationDemoService service;
+	
+	@Autowired 
+	ExceptionHandler handler;
 
+	@GetMapping("/")
+	public void BadMapping() throws Throwable {
+		
+		System.out.println("The path variable is ..." );
+
+		handler.throwCustomException("Bad Request URI !!!");
+	}
+	
 	@GetMapping("/{id}")
-	public Optional<Station> findStationById(@PathVariable String id) {
+	public @ResponseBody Optional<Station> findStationById(@PathVariable String id) throws Throwable {
 
-		return stationDao.findById(id);
+		return service.getById(id);
 	}
 
 	@GetMapping("/name/{name}")
-	public List<Station> findStationByName(@PathVariable String name) {
+	public List<Station> findStationByName(@PathVariable String name) throws Exception {
 
-		List<Station> stations = stationDao.findAll();
-		List<Station> responseList = new ArrayList<>();
-
-		responseList = stations.stream().filter(station -> station.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
-		return responseList;
+		return service.getByName(name);
 	}
 
 	@GetMapping("/hdenabled/{isHdEnabled}")
-	public List<Station> findStationByhdEnabled(@PathVariable String isHdEnabled) {
+	public List<Station> findStationByhdEnabled(@PathVariable String isHdEnabled) throws Exception {
 
-		List<Station> stations = stationDao.findAll();
-		List<Station> result = new ArrayList<>();
-
-		boolean filter;
-		if (isHdEnabled.equalsIgnoreCase("true"))
-			filter = true;
-		else
-			filter = false;
-
-		result = stations.stream().filter(station -> station.isHdEnabled() == filter).collect(Collectors.toList());
-
-		return result;
+		return service.getByhdEnabled(isHdEnabled);
 	}
 
 	@GetMapping("/all")
-	public List<Station> findAllStations(Map model) {
+	public @ResponseBody List<Station> findAllStations() throws Exception {
 
-		return stationDao.findAll();
+		return (List<Station>) service.getAllStations();
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteStation(@PathVariable String id) {
-		stationDao.deleteById(id);
+	public ResponseEntity<?> deleteStation(@PathVariable String id) throws Exception {
+		
+		service.deleteStation(id);
 		return new ResponseEntity<Station>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping("/create")
-	public Station createStation(@RequestBody Station station) {
-		Station savedStation = stationDao.save(station);
-
-		return savedStation;
-
+	public ResponseEntity<Station> createStation(@RequestBody Station station) throws Exception {
+		
+		System.out.println("In the Request Create with the data : " + station);
+		Station response = service.createStation(station);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/station/{id}").buildAndExpand(response.getStaionId()).toUri();
+		return  ResponseEntity.created(location).build();
 	}
 
 }

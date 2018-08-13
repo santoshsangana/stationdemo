@@ -10,8 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.sangana.stationdemo.dao.StationDAO;
 import com.sangana.stationdemo.domain.Station;
+import com.sangana.stationdemo.service.StationDemoService;
 
 @SpringBootApplication
 @EnableJpaRepositories
@@ -21,8 +21,9 @@ public class StationdemoApplication {
 		SpringApplication.run(StationdemoApplication.class, args);
 	}
 	
-	
-	
+	@Autowired
+	StationDemoService service;
+
 	@PostConstruct
 	public void init() {
 		
@@ -32,9 +33,7 @@ public class StationdemoApplication {
 		list.add(new Station("1002", "FOX", false, "KTBC"));
 		list.add(new Station("1003", "ABC", true, "KVUE"));
 		
-		stationDao.saveAll(list);
+		service.saveAllStations(list);
 	}
 	
-	@Autowired
-	StationDAO stationDao;
 }

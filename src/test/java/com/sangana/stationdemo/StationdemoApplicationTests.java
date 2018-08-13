@@ -2,25 +2,16 @@ package com.sangana.stationdemo;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.sangana.stationdemo.dao.StationDAO;
 import com.sangana.stationdemo.domain.Station;
@@ -49,7 +40,7 @@ public class StationdemoApplicationTests {
 		Station station2 = new Station("2", "ESPN", true, "KTBC");
 		entityManager.persist(station2);
 		
-		List<Station> foundList = stationDao.findAll();
+		List<Station> foundList = (List<Station>) stationDao.findAll();
 		assert(foundList.size() == 5);
 		
     }
@@ -70,7 +61,7 @@ public class StationdemoApplicationTests {
     	
 		Station station = new Station("4", "TNT", true, "KTBC");
 		entityManager.persist(station);
-		List<Station> foundlist = stationDao.findStationByName("TNT");
+		List<Station> foundlist = stationDao.findByName("TNT");
 		assertEquals(station, foundlist.stream().filter(found -> "TNT".equalsIgnoreCase(found.getName())).findAny().orElse(null) );
 		
     }
