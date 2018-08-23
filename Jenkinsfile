@@ -11,7 +11,7 @@ pipeline {
 //                docker.build("-t tomcatwebapp:${env.BUILD_ID}")
 			}
 		}
-	}
+
 	stage('build Dockerimage'){
       steps{
         dir('dockerbuild'){
@@ -20,4 +20,5 @@ pipeline {
         }
       }
     }
+  }
 }
