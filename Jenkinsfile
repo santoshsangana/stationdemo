@@ -13,7 +13,7 @@ pipeline {
 		}
 
 	stage('build Dockerimage'){
-//      steps{
+      steps{
 //        dir('dockerbuild'){
             fileExists 'Dockerfile'
             def dockerHome = tool name: 'myDocker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
@@ -21,6 +21,6 @@ pipeline {
             sh "${dockerCMD} build . -t tomcatwebapp:${env.BUILD_ID} "
            }
 //      }
-//    }
+    }
   }
 }
