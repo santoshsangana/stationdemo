@@ -14,7 +14,7 @@ pipeline {
 	    steps {
             def dockerHome = tool name: 'myDocker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
             }
-        post {
+            {
             sh "${dockerHome}/bin/docker build . -t tomcatwebapp:${env.BUILD_ID} "
             }
     }
