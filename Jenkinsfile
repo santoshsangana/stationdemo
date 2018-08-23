@@ -11,9 +11,12 @@ pipeline {
 		}
 
 	stage('build Docker /image'){
+	    steps {
             def dockerHome = tool name: 'myDocker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-//            def dockerCMD = "{dockerHome}/bin/docker"
+            }
+        post {
             sh "${dockerHome}/bin/docker build . -t tomcatwebapp:${env.BUILD_ID} "
+            }
     }
   }
 }
